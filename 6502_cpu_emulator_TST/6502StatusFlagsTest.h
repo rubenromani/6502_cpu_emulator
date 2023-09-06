@@ -45,4 +45,5 @@ TEST_F(M6502StatusFlagsTest, CLCClearCarryFlag)
 	EXPECT_EQ(mem[0x0080 + offsetAddr], zero ? 0x00 : (negative ? 0x80 : 0x02));
 	EXPECT_EQ(cpu.PS.Flags.Z, zero ? true : false);
 	EXPECT_EQ(cpu.PS.Flags.N, negative ? true : false);
+
 }
