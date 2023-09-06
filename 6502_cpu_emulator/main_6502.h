@@ -293,6 +293,7 @@ struct m6502::CPU
 		INS_RTS =		0x60,
 		INS_JMP_ABS =	0x4C,
 		INS_JMP_IND =	0x6C;
+
 		
 	
 	Word LoadPrg(Byte* Program, u32 nBytes, Mem& memory);

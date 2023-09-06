@@ -644,6 +644,7 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 		}break;
 		default:
 		{
+
 			printf("Intruction not handled, Ins: %d\tCycles: %d\n", Ins, Cycles);
 			throw - 1;
 		}break;
