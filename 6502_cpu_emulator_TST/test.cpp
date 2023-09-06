@@ -8,6 +8,7 @@
 #include "6502LoadProgramTest.h"
 #include "6502IncrementAndDecrementTest.h"
 #include "6502BranchesTest.h"
+#include "6502StatusFlagsTest.h"
 
 GTEST_API_ int main(int argc, char** argv)
 {

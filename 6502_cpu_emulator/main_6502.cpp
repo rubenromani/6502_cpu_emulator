@@ -618,6 +618,41 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 		{
 			BranchCondition(Cycles, memory, PS.Flags.C == 1);
 		}break;
+		case INS_CLC: 
+		{
+			PS.Flags.C = 0;
+			Cycles--;
+		}break;
+		case INS_SEC: 
+		{
+			PS.Flags.C = 1;
+			Cycles--;
+		}break;
+		case INS_CLI: 
+		{
+			PS.Flags.I = 0;
+			Cycles--;
+		}break;
+		case INS_SEI: 
+		{
+			PS.Flags.I = 1;
+			Cycles--;
+		}break;
+		case INS_CLV: 
+		{
+			PS.Flags.V = 0;
+			Cycles--;
+		}break;
+		case INS_CLD: 
+		{
+			PS.Flags.D = 0;
+			Cycles--;
+		}break;
+		case INS_SED: 
+		{
+			PS.Flags.D = 1;
+			Cycles--;
+		}break;
 		case INS_JSR:
 		{
 			Word SubAddr = FetchWord(Cycles, memory);
