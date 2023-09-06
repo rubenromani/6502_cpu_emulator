@@ -288,6 +288,14 @@ struct m6502::CPU
 		INS_BVC =		0x50,
 		INS_BMI =		0x30,
 		INS_BPL =		0x10,
+		// Flags
+		INS_CLC =		0x18,
+		INS_SEC =		0x38,
+		INS_CLI =		0x58,
+		INS_SEI =		0x78,
+		INS_CLV =		0xB8,
+		INS_CLD =		0xD8,
+		INS_SED =		0xF8,
 		// JSR, RTS
 		INS_JSR =		0x20,
 		INS_RTS =		0x60,
