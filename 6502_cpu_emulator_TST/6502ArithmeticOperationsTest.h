@@ -209,7 +209,7 @@ TEST_F(M6502ArithmeticOperationsTest, ADCImmediateCanAddSettingZeroFlag)
 	EXPECT_FALSE(cpu.PS.Flags.C);
 }
 
-TEST_F(M6502ArithmeticOperationsTest, ADCImmediateCanAddSettingCarryAndOverflowFlag)
+TEST_F(M6502ArithmeticOperationsTest, ADCImmediateCanAddSettingZeroCarryAndOverflowFlag)
 {
 	// Given:
 	cpu.Reset(mem, 0xFF00);
@@ -231,7 +231,7 @@ TEST_F(M6502ArithmeticOperationsTest, ADCImmediateCanAddSettingCarryAndOverflowF
 	EXPECT_EQ(cpu.A, 0x00);
 	EXPECT_FALSE(cpu.PS.Flags.N);
 	EXPECT_TRUE(cpu.PS.Flags.V);
-	EXPECT_FALSE(cpu.PS.Flags.Z);
+	EXPECT_TRUE(cpu.PS.Flags.Z);
 	EXPECT_TRUE(cpu.PS.Flags.C);
 }
 
@@ -524,4 +524,31 @@ TEST_F(M6502ArithmeticOperationsTest, ADC_INYPageCrossCanAddWithoutSettingFlags)
 	EXPECT_FALSE(cpu.PS.Flags.V);
 	EXPECT_FALSE(cpu.PS.Flags.Z);
 	EXPECT_FALSE(cpu.PS.Flags.C);
+}
+
+
+TEST_F(M6502ArithmeticOperationsTest, SBCImmediateCanSubtractSettingZeroFlag)
+{
+	// Given:
+	cpu.Reset(mem, 0xFF00);
+	cpu.A = 0x00;
+	mem[0xFF00] = CPU::INS_SBC_IM;
+	mem[0xFF01] = 0x00;
+	cpu.PS.Flags.N = true;
+	cpu.PS.Flags.V = true;
+	cpu.PS.Flags.Z = false;
+	cpu.PS.Flags.C = true;
+	const s32 EXPECTED_CYCLES = 2;
+	CpuMakeCopy();
+
+	// When:
+	const s32 ActualCycles = cpu.Execute(EXPECTED_CYCLES, mem);
+
+	// Then:
+	EXPECT_EQ(ActualCycles, EXPECTED_CYCLES);
+	EXPECT_EQ(cpu.A, 0x00);
+	EXPECT_FALSE(cpu.PS.Flags.N);
+	EXPECT_FALSE(cpu.PS.Flags.V);
+	EXPECT_TRUE(cpu.PS.Flags.Z);
+	EXPECT_TRUE(cpu.PS.Flags.C);
 }

@@ -663,7 +663,7 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 				static_cast<Word>(A) +
 				static_cast<Word>(FetchByte(Cycles, memory)) +
 				static_cast<Word>(0x01*PS.Flags.C);
-			SetZNVCFlags(Result);
+			SetADCFlags(Result);
 			A = static_cast<Byte>(Result & 0x00FF);
 		}break;
 		case INS_ADC_ZP  :
@@ -673,7 +673,7 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 				static_cast<Word>(A) +
 				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
 				static_cast<Word>(0x01 * PS.Flags.C);
-			SetZNVCFlags(Result);
+			SetADCFlags(Result);
 			A = static_cast<Byte>(Result & 0x00FF);
 		}break;
 		case INS_ADC_ZPX :
@@ -683,7 +683,7 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 				static_cast<Word>(A) +
 				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
 				static_cast<Word>(0x01 * PS.Flags.C);
-			SetZNVCFlags(Result);
+			SetADCFlags(Result);
 			A = static_cast<Byte>(Result & 0x00FF);
 		}break;
 		case INS_ADC_ABS :
@@ -693,7 +693,7 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 				static_cast<Word>(A) +
 				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
 				static_cast<Word>(0x01 * PS.Flags.C);
-			SetZNVCFlags(Result);
+			SetADCFlags(Result);
 			A = static_cast<Byte>(Result & 0x00FF);
 		}break;
 		case INS_ADC_ABSX:
@@ -703,7 +703,7 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 				static_cast<Word>(A) +
 				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
 				static_cast<Word>(0x01 * PS.Flags.C);
-			SetZNVCFlags(Result);
+			SetADCFlags(Result);
 			A = static_cast<Byte>(Result & 0x00FF);
 		}break;
 		case INS_ADC_ABSY:
@@ -713,7 +713,7 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 				static_cast<Word>(A) +
 				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
 				static_cast<Word>(0x01 * PS.Flags.C);
-			SetZNVCFlags(Result);
+			SetADCFlags(Result);
 			A = static_cast<Byte>(Result & 0x00FF);
 		}break;
 		case INS_ADC_INX :
@@ -723,7 +723,7 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 				static_cast<Word>(A) +
 				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
 				static_cast<Word>(0x01 * PS.Flags.C);
-			SetZNVCFlags(Result);
+			SetADCFlags(Result);
 			A = static_cast<Byte>(Result & 0x00FF);
 		}break;
 		case INS_ADC_INY :
@@ -733,8 +733,113 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 				static_cast<Word>(A) +
 				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
 				static_cast<Word>(0x01 * PS.Flags.C);
-			SetZNVCFlags(Result);
+			SetADCFlags(Result);
 			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_SBC_IM:
+		{
+			Byte Operand = ~FetchByte(Cycles, memory);
+			Byte Carry = 0x01 * PS.Flags.C;
+			Word Result = static_cast<Word>(A);
+			Result += (Operand);
+			Result += Carry;
+			SetADCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_CMP_IM	:
+		{
+			Byte MemValue = FetchByte(Cycles, memory);
+			Byte Result	= A - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMP_ZP	:
+		{
+			Word Address = AddrZeroPage(Cycles, memory);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = A - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMP_ZPX:
+		{
+			Word Address = AddrZeroPageOffset(Cycles, memory, X);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = A - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMP_ABS:
+		{
+			Word Address = AddrAbsolute(Cycles, memory);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = A - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMP_ABSX:
+		{
+			Word Address = AddrAbsoluteOffset(Cycles, memory, X);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = A - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMP_ABSY:
+		{
+			Word Address = AddrAbsoluteOffset(Cycles, memory, Y);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = A - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMP_INX:
+		{
+			Word Address = AddrIndirectX(Cycles, memory);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = A - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMP_INY:
+		{
+			Word Address = AddrIndirectY(Cycles, memory);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = A - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMX_IM :
+		{
+			Byte MemValue = FetchByte(Cycles, memory);
+			Byte Result = X - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMX_ZP :
+		{
+			Word Address = AddrZeroPage(Cycles, memory);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = X - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMX_ABS:
+		{
+			Word Address = AddrAbsolute(Cycles, memory);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = X - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMY_IM :
+		{
+			Byte MemValue = FetchByte(Cycles, memory);
+			Byte Result = Y - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMY_ZP :
+		{
+			Word Address = AddrZeroPage(Cycles, memory);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = Y - MemValue;
+			SetCMPFlags(Result);
+		}break;
+		case INS_CMY_ABS:
+		{
+			Word Address = AddrAbsolute(Cycles, memory);
+			Byte MemValue = ReadByte(Cycles, Address, memory);
+			Byte Result = Y - MemValue;
+			SetCMPFlags(Result);
 		}break;
 		case INS_JSR:
 		{

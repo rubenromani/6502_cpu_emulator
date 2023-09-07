@@ -306,6 +306,23 @@ struct m6502::CPU
 		INS_ADC_ABSY =	0x79,
 		INS_ADC_INX =	0x61,
 		INS_ADC_INY =	0x71,
+		// SBC
+		INS_SBC_IM = 0xE9,
+		// Compare
+		INS_CMP_IM =	0xC9,
+		INS_CMP_ZP =	0xC5,
+		INS_CMP_ZPX =	0xD5,
+		INS_CMP_ABS =	0xCD,
+		INS_CMP_ABSX =	0xDD,
+		INS_CMP_ABSY =	0xD9,
+		INS_CMP_INX =	0xC1,
+		INS_CMP_INY =	0xD1,
+		INS_CMX_IM =	0xE0,
+		INS_CMX_ZP =	0xE4,
+		INS_CMX_ABS =	0xEC,
+		INS_CMY_IM =	0xC0,
+		INS_CMY_ZP =	0xC4,
+		INS_CMY_ABS =	0xCC,
 		// JSR, RTS
 		INS_JSR =		0x20,
 		INS_RTS =		0x60,
@@ -325,13 +342,20 @@ struct m6502::CPU
 		PS.Flags.N = (Register & 0b10000000) > 0;
 	}
 
-	void SetZNVCFlags(Word Value) 
+	void SetADCFlags(Word Value) 
 	{
-		Value &= 0b0000000111111111;
 		PS.Flags.N = (Value & 0b0000000010000000) > 0;
-		PS.Flags.Z = (Value << 8 ) == 0;
-		PS.Flags.C = (Value & 0b0000000100000000) > 0;
+		PS.Flags.Z = (Value & 0x00FF ) == 0;
+		PS.Flags.C = (Value > 0xFF) ;
 		PS.Flags.V = PS.Flags.N ^ PS.Flags.C;
+
+	}
+
+	void SetCMPFlags(Byte Value)
+	{
+		PS.Flags.N = (Value & 0b10000000) > 0;
+		PS.Flags.Z = Value == 0;
+		PS.Flags.C = (Value & 0b10000000) == 0;
 
 	}
 	
