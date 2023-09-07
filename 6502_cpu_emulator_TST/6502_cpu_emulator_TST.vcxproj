@@ -37,7 +37,9 @@
     <SourcePath>C:\Users\rrube\OneDrive - Versuni\Desktop\Ruben\c++\6502_cpu\6502_cpu_emulator\6502_cpu_emulator;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="6502ArithmeticOperationsTest.h" />
     <ClInclude Include="6502BranchesTest.h" />
+    <ClInclude Include="6502CompareTest.h" />
     <ClInclude Include="6502LoadProgramTest.h" />
     <ClInclude Include="6502JumpsAndCallsTest.h" />
     <ClInclude Include="6502LoadRegisterTest.h" />

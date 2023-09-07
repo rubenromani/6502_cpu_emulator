@@ -144,3 +144,19 @@ TEST_F(M6502StatusFlagsTest, SEDSetDecimalFlag)
 	EXPECT_EQ(ActualCycles, EXPECTED_CYCLES);
 	EXPECT_TRUE(cpu.PS.Flags.D);
 }
+
+TEST_F(M6502StatusFlagsTest, NOPDNothing)
+{
+	// Given:
+	cpu.Reset(mem, 0xFF00);
+	mem[0xFF00] = CPU::INS_NOP;
+	const s32 EXPECTED_CYCLES = 2;
+	CpuMakeCopy();
+
+	// When:
+	const s32 ActualCycles = cpu.Execute(EXPECTED_CYCLES, mem);
+
+	// Then:
+	EXPECT_EQ(ActualCycles, EXPECTED_CYCLES);
+	EXPECT_EQ(cpu.PS.Reg, cpuCopy.PS.Reg);
+}

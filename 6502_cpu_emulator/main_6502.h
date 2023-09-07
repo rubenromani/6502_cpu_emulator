@@ -296,6 +296,16 @@ struct m6502::CPU
 		INS_CLV =		0xB8,
 		INS_CLD =		0xD8,
 		INS_SED =		0xF8,
+		INS_NOP =		0xEA,
+		// ADC
+		INS_ADC_IM =	0x69,
+		INS_ADC_ZP =	0x65,
+		INS_ADC_ZPX =	0x75,
+		INS_ADC_ABS =	0x6D,
+		INS_ADC_ABSX =	0x7D,
+		INS_ADC_ABSY =	0x79,
+		INS_ADC_INX =	0x61,
+		INS_ADC_INY =	0x71,
 		// JSR, RTS
 		INS_JSR =		0x20,
 		INS_RTS =		0x60,
@@ -313,6 +323,16 @@ struct m6502::CPU
 	{
 		PS.Flags.Z = (Register == 0);
 		PS.Flags.N = (Register & 0b10000000) > 0;
+	}
+
+	void SetZNVCFlags(Word Value) 
+	{
+		Value &= 0b0000000111111111;
+		PS.Flags.N = (Value & 0b0000000010000000) > 0;
+		PS.Flags.Z = (Value << 8 ) == 0;
+		PS.Flags.C = (Value & 0b0000000100000000) > 0;
+		PS.Flags.V = PS.Flags.N ^ PS.Flags.C;
+
 	}
 	
 	/** @return the number of cycles that were used */

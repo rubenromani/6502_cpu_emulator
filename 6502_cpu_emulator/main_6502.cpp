@@ -653,6 +653,89 @@ m6502::s32 m6502::CPU::Execute(s32 Cycles, Mem& memory)
 			PS.Flags.D = 1;
 			Cycles--;
 		}break;
+		case INS_NOP:
+		{
+			Cycles--;
+		}break;
+		case INS_ADC_IM  :
+		{
+			Word Result =
+				static_cast<Word>(A) +
+				static_cast<Word>(FetchByte(Cycles, memory)) +
+				static_cast<Word>(0x01*PS.Flags.C);
+			SetZNVCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_ADC_ZP  :
+		{
+			Word Address = AddrZeroPage(Cycles, memory);
+			Word Result =
+				static_cast<Word>(A) +
+				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
+				static_cast<Word>(0x01 * PS.Flags.C);
+			SetZNVCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_ADC_ZPX :
+		{
+			Word Address = AddrZeroPageOffset(Cycles, memory, X);
+			Word Result =
+				static_cast<Word>(A) +
+				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
+				static_cast<Word>(0x01 * PS.Flags.C);
+			SetZNVCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_ADC_ABS :
+		{
+			Word Address = AddrAbsolute(Cycles, memory);
+			Word Result =
+				static_cast<Word>(A) +
+				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
+				static_cast<Word>(0x01 * PS.Flags.C);
+			SetZNVCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_ADC_ABSX:
+		{
+			Word Address = AddrAbsoluteOffset(Cycles, memory, X);
+			Word Result =
+				static_cast<Word>(A) +
+				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
+				static_cast<Word>(0x01 * PS.Flags.C);
+			SetZNVCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_ADC_ABSY:
+		{
+			Word Address = AddrAbsoluteOffset(Cycles, memory, Y);
+			Word Result =
+				static_cast<Word>(A) +
+				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
+				static_cast<Word>(0x01 * PS.Flags.C);
+			SetZNVCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_ADC_INX :
+		{
+			Word Address = AddrIndirectX(Cycles, memory);
+			Word Result =
+				static_cast<Word>(A) +
+				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
+				static_cast<Word>(0x01 * PS.Flags.C);
+			SetZNVCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
+		case INS_ADC_INY :
+		{
+			Word Address = AddrIndirectY(Cycles, memory);
+			Word Result =
+				static_cast<Word>(A) +
+				static_cast<Word>(ReadByte(Cycles, Address, memory)) +
+				static_cast<Word>(0x01 * PS.Flags.C);
+			SetZNVCFlags(Result);
+			A = static_cast<Byte>(Result & 0x00FF);
+		}break;
 		case INS_JSR:
 		{
 			Word SubAddr = FetchWord(Cycles, memory);
